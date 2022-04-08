@@ -6,6 +6,8 @@ import Contact from '../Models/contact';
 import User from '../Models/user';
 import { AuthGuard, UserDisplayName } from '../Util/index';
 
+/*********************************** TOP-LEVEL ROUTES ***************************/
+
 /* GET home page. */
 router.get('/', function(req, res, next) 
 {
@@ -24,26 +26,27 @@ router.get('/about', function(req, res, next)
   res.render('index', { title: 'About Us', page: 'about', displayName: UserDisplayName(req) });
 });
 
+/* GET projects page. */
+router.get('/projects', function(req, res, next) 
+{
+  res.render('index', { title: 'Our Projects', page: 'projects', displayName: UserDisplayName(req) });
+});
+
 /* GET services page. */
 router.get('/services', function(req, res, next) 
 {
   res.render('index', { title: 'Our Services', page: 'services', displayName: UserDisplayName(req) });
 });
 
-/* GET products page. */
-router.get('/products', function(req, res, next) 
-{
-  res.render('index', { title: 'Our Products', page: 'products', displayName: UserDisplayName(req) });
-});
-
-/* GET products page. */
+/* GET contact page. */
 router.get('/contact', function(req, res, next) 
 {
   res.render('index', { title: 'Contact Us', page: 'contact', displayName: UserDisplayName(req) });
 });
 
-/*************************************** AUTHENTICATION ROUTES************************************************/
-/* GET - Display login page. */
+/*********************************** AUTHENTICATION ROUTES ***************************/
+
+/* GET display the login page. */
 router.get('/login', function(req, res, next) 
 {
   if(!req.user)
@@ -59,13 +62,13 @@ router.post('/login', function(req, res, next)
 {
   passport.authenticate('local', function(err, user, info)
   {
-    // are there serer errors?
+    // are there server errors?
     if(err)
     {
       console.error(err);
       res.end(err);
     }
-    
+
     // are there login errors?
     if(!user)
     {
@@ -82,18 +85,18 @@ router.post('/login', function(req, res, next)
         res.end(err);
       }
 
-      return res.redirect('/contact-list')
+      return res.redirect('/contact-list');
     });
   })(req, res, next);
 });
 
-/* GET - Display register page. */
+/* GET display the register page. */
 router.get('/register', function(req, res, next) 
 {
   if(!req.user)
   {
-  return res.render('index', 
-    { title: 'Register', page: 'register', messages: req.flash('registerMessage'), displayName: UserDisplayName(req) });
+    return res.render('index', 
+      { title: 'Register', page: 'register', messages: req.flash('registerMessage'), displayName: UserDisplayName(req) });
   }
   return res.redirect('/contact-list');
 });
@@ -115,24 +118,23 @@ router.post('/register', function(req, res, next)
     {
       if(err.name == "UserExistsError")
       {
-        console.error('ERROR: Inserting User');
+        console.error('ERROR: User Already Exists!');
         req.flash('registerMessage', 'Registration Error');
-        console.error('ERROR: User Already Exists');
       }
-      req.flash('registerMessage', 'Server Failure');
-      console.error(err.name);
+      console.error(err.name); // other error
+      req.flash('registerMessage', 'Server Error');
       return res.redirect('/register');
     }
-    
+
     // automatically login the user
-    return passport.authenticate('local')(req, res, ()=>
+    return passport.authenticate('local')(req, res, function()
     {
       return res.redirect('/contact-list');
     });
   });
 });
 
-/* process logout request */
+/* Process the logout request */
 router.get('/logout', function(req, res, next) 
 {
   req.logOut();
@@ -140,37 +142,36 @@ router.get('/logout', function(req, res, next)
   res.redirect('/login');
 });
 
-/* Temporary Routes - Contact-List related pages */
-/*************************************** CONTACT-LIST ROUTES************************************************/
+/*********************************** CONTACT-LIST ROUTES ***************************/
+/* Temporary Routes - Contact-List Related */
+
 /* GET contact-list page. */
 router.get('/contact-list', AuthGuard, function(req, res, next) 
 {
-  // R - Read
-  Contact.find(function(err, contactList)
+  Contact.find(function(err, contactsCollection)
   {
     if(err)
     {
-      console.error("Error Encountered: " + err.message);
-      res.end();
+      console.error(err);
+      res.end(err);
     }
-
     res.render('index', 
-      { title: 'Contact List', page: 'contact-list', contacts: contactList, displayName: UserDisplayName(req) });
+      { title: 'Contact List', page: 'contact-list', contacts: contactsCollection,  displayName: UserDisplayName(req) });
   });
-
- 
+  
+  
 });
 
-/* Display the Add page. */
+/* Display the Add Page */
 router.get('/add', AuthGuard, function(req, res, next) 
 {
   res.render('index', { title: 'Add', page: 'edit', contact: '', displayName: UserDisplayName(req) });
 });
 
-/* Prrocess the Add request */
+/* Process the Add Request */
 router.post('/add', AuthGuard, function(req, res, next) 
 {
-  // instantiate a new contact to add
+  // instantiate a new  contact to add
   let newContact = new Contact
   ({
     "FullName": req.body.fullName,
@@ -178,7 +179,7 @@ router.post('/add', AuthGuard, function(req, res, next)
     "EmailAddress": req.body.emailAddress
   });
 
-  // db.contacts.insert
+  // insert contact into db
   Contact.create(newContact, function(err)
   {
     if(err)
@@ -186,12 +187,13 @@ router.post('/add', AuthGuard, function(req, res, next)
       console.error(err);
       res.end(err);
     }
-    // newContact has been added to the db -> now go back to the contact-list
+
+    // newContact has been added to the db -> go to the contact-list
     res.redirect('/contact-list');
-  });
+  })
 });
 
-/* Display the Edit page with data from DB */
+/* Display the Edit Page with Data injected from the db */
 router.get('/edit/:id', AuthGuard, function(req, res, next) 
 {
   let id = req.params.id;
@@ -207,7 +209,7 @@ router.get('/edit/:id', AuthGuard, function(req, res, next)
 
     // show the edit view with the data
     res.render('index', { title: 'Edit', page: 'edit', contact: contactToEdit, displayName: UserDisplayName(req) });
-  });  
+  });
 });
 
 /* Process the Edit request */
@@ -224,7 +226,7 @@ router.post('/edit/:id', AuthGuard, function(req, res, next)
     "EmailAddress": req.body.emailAddress
   });
 
-  // db.contacts.update({"_id":id}, update info...)
+  // db.contacts.update
   Contact.updateOne({_id:id}, updatedContact, function(err: ErrorCallback)
   {
     if(err)
@@ -233,17 +235,17 @@ router.post('/edit/:id', AuthGuard, function(req, res, next)
       res.end(err);
     }
 
-    // the edit was successful -> go back to the contact-list
-    res.redirect('/contact-list');
-  });  
+    // edit was successful -> go to the contact-list page
+    res.redirect('/contact-list')
+  });
 });
 
-/* Process the delete request */
+/* Process the Delete request */
 router.get('/delete/:id', AuthGuard, function(req, res, next) 
 {
   let id = req.params.id;
 
-  // db.contacts.remove({"_id":id})
+  // pass the id to the db and delete the contact
   Contact.remove({_id: id}, function(err)
   {
     if(err)
@@ -252,9 +254,9 @@ router.get('/delete/:id', AuthGuard, function(req, res, next)
       res.end(err);
     }
 
-    // delete was successful -> go back to the contact-list
+    // delete was successful
     res.redirect('/contact-list');
-  });  
+  });
 });
 
 

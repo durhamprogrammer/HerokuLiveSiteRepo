@@ -37,7 +37,7 @@ var core;
             this.m_password = password;
         }
         toString() {
-            return `Display Name  : ${this.DisplayName}\nEmail Address : ${this.EmailAddress}\nUsername : ${this.Username}`;
+            return `Display Name : ${this.DisplayName}\nEmail Address : ${this.EmailAddress}\nUsername : ${this.Username}`;
         }
         toJSON() {
             return {
@@ -56,7 +56,7 @@ var core;
             if (this.DisplayName !== "" && this.EmailAddress !== "" && this.Username !== "") {
                 return `${this.DisplayName},${this.EmailAddress},${this.Username}`;
             }
-            console.error("One or more properties of the User Object are missing or empty");
+            console.error("One or more properties of the User Object are missing or invalid");
             return null;
         }
         deserialize(data) {

@@ -52,9 +52,9 @@ router.AddTable([
     "/services",
     "/contact",
     "/contact-list",
-    "/products",
-    "/login",
+    "/projects",
     "/register",
+    "/login",
     "/edit"
 ]);
 let route = location.pathname;

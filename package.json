@@ -1,7 +1,7 @@
 {
-  "name": "ICE-12",
+  "name": "ice-12",
   "version": "1.0.0",
-  "description": "ICE 12 for WEBD6201 in the Winter 2022 Semester",
+  "description": "Repo for WEBD6201-W2022 ICE-12",
   "main": "server.js",
   "author": "Tom Tsiliopoulos",
   "license": "MIT",
@@ -37,7 +37,7 @@
     "@types/jquery": "^3.5.13",
     "@types/mongoose": "^5.11.97",
     "@types/morgan": "^1.9.3",
-    "@types/node": "^17.0.23",
+    "@types/node": "^17.0.21",
     "@types/passport": "^1.0.7",
     "@types/passport-local": "^1.0.34",
     "@types/passport-local-mongoose": "^6.1.0"

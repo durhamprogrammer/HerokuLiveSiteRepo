@@ -44,11 +44,11 @@ const app = (0, express_1.default)();
 const DBConfig = __importStar(require("./db"));
 mongoose_1.default.connect(DBConfig.RemoteURI);
 const db = mongoose_1.default.connection;
-db.on("error", function () {
-    console.error("Connection Error");
+db.on('error', function () {
+    console.error('connection error');
 });
-db.once("open", function () {
-    console.log(`Connected to MongoDB at ${DBConfig.HostName}`);
+db.once('open', function () {
+    console.log(`Connected to MongoDB at: ${DBConfig.Host}`);
 });
 app.set('views', path_1.default.join(__dirname, '../Views'));
 app.set('view engine', 'ejs');

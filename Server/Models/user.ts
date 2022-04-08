@@ -1,5 +1,5 @@
 import mongoose, { PassportLocalSchema } from 'mongoose';
-const Schema = mongoose.Schema; // alias for mongoose.Schema
+const Schema = mongoose.Schema; // alias
 import passportLocalMongoose from 'passport-local-mongoose';
 
 const UserSchema = new Schema
@@ -7,12 +7,12 @@ const UserSchema = new Schema
     DisplayName: String,
     username: String,
     EmailAddress: String,
-    Created: 
+    Created:
     {
         type: Date,
         default: Date.now()
     },
-    Updated: 
+    Updated:
     {
         type: Date,
         default: Date.now()
@@ -23,17 +23,15 @@ const UserSchema = new Schema
 });
 
 UserSchema.plugin(passportLocalMongoose);
-
 const Model = mongoose.model("User", UserSchema as PassportLocalSchema);
 
 declare global
 {
     export type UserDocument = mongoose.Document &
     {
-        _id: String,
-        DisplayName: String,
-        Username: String,
+        username: String,
         EmailAddress: String,
+        DisplayName: String
     }
 }
 

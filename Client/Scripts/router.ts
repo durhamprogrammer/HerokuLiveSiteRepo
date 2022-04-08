@@ -2,45 +2,27 @@ namespace core
 {
     export class Router
     {
-        // private instance members
         private m_activeLink: string;
         private m_linkData: string;
         private m_routingTable: string[];
 
-        // public properties
-
-        /**
-         *
-         * @returns {string}
-         */
-         public get ActiveLink(): string
+        // public properties (getters and setters)
+        get ActiveLink(): string
         {
             return this.m_activeLink;
         }
 
-        /**
-         *
-         * @param {string} link
-         */
-         public set ActiveLink(link: string)
+        set ActiveLink(link:string)
         {
             this.m_activeLink = link;
         }
 
-        /**
-         *
-         * @returns {string}
-         */
-         public get LinkData(): string
+        get LinkData(): string
         {
             return this.m_linkData;
         }
 
-        /**
-         *
-         * @param {string} data
-         */
-         public set LinkData(data: string)
+        set LinkData(data:string)
         {
             this.m_linkData = data;
         }
@@ -49,22 +31,22 @@ namespace core
 
         /**
          * Creates an instance of Router.
+         * 
          * @constructor
          */
         constructor()
         {
             this.m_activeLink = "";
             this.m_linkData = "";
-            this.m_routingTable = []; // creates an empty string array
+            this.m_routingTable = []; // creates an empty array
         }
-
+        
         // public methods
 
         /**
-         * This method Adds a new Route to the Routing Table
+         * Adds a new route to the Routing table
          *
          * @param {string} route
-         * @returns {void}
          */
         Add(route: string): void
         {
@@ -72,12 +54,10 @@ namespace core
         }
 
         /**
-         * This replaces the current Routing Table object (if it exists) with a reference to a new 
-         * string array of routes
-         * Routes should begin with the '/' character
-         *
+         * This replaces the current routing table with a new one
+         * Routes should begin with '/' character
+         * 
          * @param {string[]} routingTable
-         * @returns {void}
          */
         AddTable(routingTable: string[]): void
         {
@@ -86,12 +66,12 @@ namespace core
 
         /**
          * This method finds the index of the route in the routing table
-         * otherwise, it returns -1 if the route is not found
+         * otherwise it returns -1 if the route is not found
          *
          * @param {string} route
          * @returns {number}
          */
-        Find(route:string): number
+        Find(route: string): number
         {
             return this.m_routingTable.indexOf(route);
         }
@@ -99,14 +79,13 @@ namespace core
         /**
          * This method removes a route from the Routing Table
          * It returns true if the route was successfully removed,
-         * otherwise, it returns false
+         * otherwise it returns false
          *
          * @param {string} route
          * @returns {boolean}
          */
         Remove(route: string): boolean
         {
-            // if the route is found
             if(this.Find(route) > -1)
             {
                 this.m_routingTable.splice(this.Find(route), 1);
@@ -115,9 +94,10 @@ namespace core
             return false;
         }
 
-        // public override functions
+        // overridden methods
+
         /**
-         * This method returns the routing table as a comma-separated string
+         * This method overrides the built-in toString method and returns the entire routing table as a string
          * 
          * @override
          * @returns {string}
@@ -137,9 +117,9 @@ router.AddTable([
     "/services",
     "/contact",
     "/contact-list",
-    "/products",
-    "/login",
+    "/projects",
     "/register",
+    "/login",
     "/edit"
 ]);
 
@@ -151,5 +131,6 @@ if(router.Find(route) > -1)
 }
 else
 {
-    router.ActiveLink = "404";
+    router.ActiveLink = "404"; // file not found
 }
+

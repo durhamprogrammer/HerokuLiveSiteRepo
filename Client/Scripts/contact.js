@@ -32,8 +32,8 @@ var core;
             if (this.FullName !== "" && this.ContactNumber !== "" && this.EmailAddress !== "") {
                 return `${this.FullName},${this.ContactNumber},${this.EmailAddress}`;
             }
-            console.error("One or more properties of the Contact Object are missing or empty");
-            return null;
+            console.error("One or more properties of the Contact Object are missing or invalid");
+            return "";
         }
         deserialize(data) {
             let propertyArray = data.split(",");
@@ -42,7 +42,7 @@ var core;
             this.EmailAddress = propertyArray[2];
         }
         toString() {
-            return `Full Name     : ${this.FullName}\nContact Number: ${this.ContactNumber}\nEmail Address : ${this.EmailAddress}`;
+            return `Full Name: ${this.FullName} \nContact Number: ${this.ContactNumber} \nEmail Address: ${this.EmailAddress}`;
         }
     }
     core.Contact = Contact;

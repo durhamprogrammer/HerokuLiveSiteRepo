@@ -18,11 +18,11 @@ router.get('/home', function (req, res, next) {
 router.get('/about', function (req, res, next) {
     res.render('index', { title: 'About Us', page: 'about', displayName: (0, index_1.UserDisplayName)(req) });
 });
+router.get('/projects', function (req, res, next) {
+    res.render('index', { title: 'Our Projects', page: 'projects', displayName: (0, index_1.UserDisplayName)(req) });
+});
 router.get('/services', function (req, res, next) {
     res.render('index', { title: 'Our Services', page: 'services', displayName: (0, index_1.UserDisplayName)(req) });
-});
-router.get('/products', function (req, res, next) {
-    res.render('index', { title: 'Our Products', page: 'products', displayName: (0, index_1.UserDisplayName)(req) });
 });
 router.get('/contact', function (req, res, next) {
     res.render('index', { title: 'Contact Us', page: 'contact', displayName: (0, index_1.UserDisplayName)(req) });
@@ -67,15 +67,14 @@ router.post('/register', function (req, res, next) {
     user_1.default.register(newUser, req.body.password, function (err) {
         if (err) {
             if (err.name == "UserExistsError") {
-                console.error('ERROR: Inserting User');
+                console.error('ERROR: User Already Exists!');
                 req.flash('registerMessage', 'Registration Error');
-                console.error('ERROR: User Already Exists');
             }
-            req.flash('registerMessage', 'Server Failure');
             console.error(err.name);
+            req.flash('registerMessage', 'Server Error');
             return res.redirect('/register');
         }
-        return passport_1.default.authenticate('local')(req, res, () => {
+        return passport_1.default.authenticate('local')(req, res, function () {
             return res.redirect('/contact-list');
         });
     });
@@ -85,12 +84,12 @@ router.get('/logout', function (req, res, next) {
     res.redirect('/login');
 });
 router.get('/contact-list', index_1.AuthGuard, function (req, res, next) {
-    contact_1.default.find(function (err, contactList) {
+    contact_1.default.find(function (err, contactsCollection) {
         if (err) {
-            console.error("Error Encountered: " + err.message);
-            res.end();
+            console.error(err);
+            res.end(err);
         }
-        res.render('index', { title: 'Contact List', page: 'contact-list', contacts: contactList, displayName: (0, index_1.UserDisplayName)(req) });
+        res.render('index', { title: 'Contact List', page: 'contact-list', contacts: contactsCollection, displayName: (0, index_1.UserDisplayName)(req) });
     });
 });
 router.get('/add', index_1.AuthGuard, function (req, res, next) {
